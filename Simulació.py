@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#Codi creat per Martí Berenguer, optimitzat per Adrià Labay, modificat per Roger Balsach, Àlex Gómez i Martí Gimeno.
+# Codi creat per Martí Berenguer, optimitzat per Adrià Labay, modificat per Roger Balsach, Àlex Gómez i Martí Gimeno.
 
 from __future__ import division, print_function
 
@@ -12,23 +12,23 @@ import os
 
 current_milli_time = lambda: int(round(time.time() * 1000))
 
-k = 5.12665			  	# Factor d'unitats (  eV^(-1/2)*nm^(-1)  )
+k = 5.12665			  	# Factor d'unitats ( eV^(-1/2)*nm^(-1) )
 hbar = 6.582e-4			# h barra (eV · ps)
 
-L = 6.0				   	# Mitja longitud de la caixa (nm)
-xi =-L/2			   	# Posicio inicial del paquet (nm)
+L = 10.0				# Mitja longitud de la caixa (nm)
+xi = -L/2			   	# Posicio inicial del paquet (nm)
 l = 0.6				   	# Mitja amplada de la barrera (nm)
 sigmax = 0.6			# Incertesa inicial del paquet (nm)
 
 T = 0.5				   	# Energia cinetica (eV)
-V0 = 1.0				# Barrera de potencial (eV)
+V0 = 0.0				# Barrera de potencial (eV)
 
 Nx = 1024				# Numero de particions en x
 dx = 2 * L / Nx 	   	# Pas en x
 N1, N2, N3 = int((L - l) / dx), int(2 * l/ dx), int((L - l) / dx) # Numero de particions abans, dins i despres de la barrera o del pou
 
 dt = 0.0005			   	# Pas de temps (ps)
-Nt = 750			   	# Numero de passos de temps
+Nt = 2000				# Numero de passos de temps
 
 N = 2 * 128				# Numero d'estats propis que utilitzarem
 dE = 0.0001		  		# Precisio en energies (eV)
@@ -36,6 +36,7 @@ dE = 0.0001		  		# Precisio en energies (eV)
 
 FILE_ENERGIES = 'energies_{}.txt'.format([L,l,V0,N,dE])
 FILE_PHI = 'phi_{}.txt'.format([L,l,V0,N])
+
 
 
 ###################################################################################
@@ -48,7 +49,6 @@ FILE_PHI = 'phi_{}.txt'.format([L,l,V0,N])
 ###################################################################################
 ###################################################################################
 
-#
 # Equacions trascendentals pels casos parell i senar
 # i els diferents valors de l'energia:
 #		 0 < E < V0  --> *_l
@@ -169,6 +169,8 @@ else:
 
 N=len(Ep)
 
+
+
 ###################################################################################
 ###################################################################################
 ####################									   ########################
@@ -282,6 +284,8 @@ for j in [0]: # representa graficament les funcions d'ona corresponents als esta
 plt.legend()
 plt.show()
 
+
+
 ##################################################################################
 ##################################################################################
 ##################											  	##################
@@ -322,7 +326,6 @@ plt.show()
 
 
 
-
 ##################################################################################
 ##################################################################################
 ##################											  	##################
@@ -355,7 +358,7 @@ print("primer checkpoint")
 Dif = np.zeros((Nx))
 
 for i in range(N):
-    Dif[i] = gaussr[i]**2+gaussi[i]**2 - gauss[i]**2
+    Dif[i] = math.sqrt(gaussr[i]**2+gaussi[i]**2) - math.sqrt(gauss[i]**2)
 
 # print(np.amax(Dif))
 # DifMax = 1.1102230246251565 * 10^(-16)
@@ -397,6 +400,8 @@ print(np.amax(gaussrD),np.amax(gaussiD))
 
 # print(Prob)
 # 0.9973613700338806
+
+
 
 ##################################################################################
 ##################################################################################
@@ -459,13 +464,13 @@ columnes. El programa guarda en el directori que especifiqueu (que existeixi) fo
 de la funció d'ona a cada instant de temps."""
 
 
-for i in range(Nt):  # nombre de passos de temps que vulguis
-    plt.figure("fig"+str(i)) 
+for i in range(Nt): # Nombre de passos de temps que vulguis
+    plt.figure("fig"+str(i))
     plt.axis([-L, L, -0.1, 1])
-    plt.plot((-l,-l), (0,V0), 'r-', linewidth=3) 
+    plt.plot((-l,-l), (0,V0), 'r-', linewidth=3)
     plt.plot((l,l), (0,V0), 'r-', linewidth=3)
-    plt.plot((-l,l), (V0,V0), 'r-', linewidth=3)
-    plt.fill([-l,l,l,-l], [0,0,V0,V0], 'r', alpha=0.2)
+#    plt.plot((-l,l), (V0,V0), 'r-', linewidth=3)
+    plt.fill([-l,l,l,-l], [0,0,V0,V0], 'r', alpha=0.2)   
     plt.plot(x,PROB[i,:],'k',linewidth=0.8)
-    plt.savefig("C:\\Users\TeicD\Desktop\EsaSimuQueMolaMazo\\fig"+str(i))  #Directori que existeixi + nombre de cada imatge (preferiblement sense espais ni accents ni ñ)
-    plt.close() #Tancar cada figura per no col·lapsar el Spyder
+    plt.savefig("C:\\Users\TeicD\Desktop\EsaSimuQueMolaV1\\fig"+str(i)) # Directori que existeixi + nombre de cada imatge (preferiblement sense espais ni accents ni ñ)
+    plt.close() # Tancar cada figura per no col·lapsar el Spyder
